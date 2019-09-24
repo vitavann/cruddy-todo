@@ -13,18 +13,18 @@ var counter = 0;
 // https://www.google.com/search?q=what+is+a+zero+padded+number%3F
 
 const zeroPaddedNumber = (num) => {
-  console.log('inside Zeropadded function')
   return sprintf('%05d', num);
 };
 
 const readCounter = (callback) => {
   fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
+      console.log(readCounter(() => console.log(fileData)))
+
       callback(null, 0); //no file data
     } else {
       callback(null, Number(fileData));  //when have data that's a stringed number
     }
-    console.log('inside readCounter function', callback)
   });
 };
 
@@ -41,26 +41,40 @@ const writeCounter = (count, callback) => {  //writes into the path file
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = (callback) => {
-  counter = counter + 1; // we want to use the counterFile instead of this variable
-  fs.readFile(exports.counterFile, (err, data) =>{
-    if(err) {
-      callback(err);
+exports.getNextUniqueId = () => {
+  // counter = counter + 1;
+
+  var counter;
+  readCounter((err, fileData) => {
+    if (err) {
+      callback(null, 0);
     } else {
-      callback(null, data + 1)
+      counter = fileData + 1;
+      writeCounter(counter, callback);
     }
   });
-  return zeroPaddedNumber(counter);  //return '0007'
 };
 
 
-getNextUniqueId((err, data) => {
-  if(err) {
-    console.log(err);
-  } else {
-    writeCounter(exports.counterFile, data + 1)
-  }
-});
+//   counter = counter + 1; // we want to use the counterFile instead of this variable
+//   fs.readFile(exports.counterFile, (err, data) =>{
+//     if(err) {
+//       callback(err);
+//     } else {
+//       callback(null, data + 1);
+//     }
+//   });
+//   return zeroPaddedNumber(counter);  //return '0007'
+// };
+
+
+// getNextUniqueId((err, data) => {
+//   if (err) {
+//     throw ('error saving id')
+//   } else {
+//     fs.readFile(exports.counterFile, data + 1);
+//   }
+// });
 
 
 
