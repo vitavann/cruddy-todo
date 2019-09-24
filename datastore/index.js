@@ -9,6 +9,7 @@ var items = {};
 
 exports.create = (text, callback) => {
   var id = counter.getNextUniqueId();
+  console.log('inside create function', text)
   items[id] = text;
   callback(null, { id, text });
 };
