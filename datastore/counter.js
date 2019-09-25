@@ -19,10 +19,9 @@ const zeroPaddedNumber = (num) => {
 const readCounter = (callback) => {
   fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
-      console.log(readCounter(() => console.log(fileData)))
-
       callback(null, 0); //no file data
     } else {
+      console.log('fileData from readCounter: ', Number(fileData));
       callback(null, Number(fileData));  //when have data that's a stringed number
     }
   });
@@ -34,6 +33,7 @@ const writeCounter = (count, callback) => {  //writes into the path file
     if (err) {  //if that string is already in file
       throw ('error writing counter');
     } else {
+      console.log('counter string: ', counterString)
       callback(null, counterString);
     }
   });
@@ -41,7 +41,7 @@ const writeCounter = (count, callback) => {  //writes into the path file
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
+exports.getNextUniqueId = (callback) => {
   // counter = counter + 1;
 
   var counter;
@@ -50,6 +50,7 @@ exports.getNextUniqueId = () => {
       callback(null, 0);
     } else {
       counter = fileData + 1;
+      console.log('counter: ', counter);
       writeCounter(counter, callback);
     }
   });
